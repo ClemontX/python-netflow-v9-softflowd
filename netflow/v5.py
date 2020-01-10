@@ -12,7 +12,9 @@ See https://github.com/djmdjm/softflowd
 """
 
 import struct
-
+import ipaddress
+import re
+import socket
 
 class DataFlow:
     """Holds one v5 DataRecord"""
@@ -20,10 +22,15 @@ class DataFlow:
     length = 48
 
     def __init__(self, data):
+
+        print (str(ipaddress.IPv4Address(int(struct.unpack('!I', data[:4])[0]))))
+
+
+
         self.data = {}
-        self.data['IPV4_SRC_ADDR'] = struct.unpack('!I', data[:4])[0]
-        self.data['IPV4_DST_ADDR'] = struct.unpack('!I', data[4:8])[0]
-        self.data['NEXT_HOP'] = struct.unpack('!I', data[8:12])[0]
+        self.data['IPV4_SRC_ADDR'] = str(ipaddress.IPv4Address(int(struct.unpack('!I', data[:4])[0])))
+        self.data['IPV4_DST_ADDR'] = str(ipaddress.IPv4Address(int(struct.unpack('!I', data[4:8])[0])))
+        self.data['NEXT_HOP'] = str(ipaddress.IPv4Address(int(struct.unpack('!I', data[8:12])[0])))
         self.data['INPUT'] = struct.unpack('!H', data[12:14])[0]
         self.data['OUTPUT'] = struct.unpack('!H', data[14:16])[0]
         self.data['IN_PACKETS'] = struct.unpack('!I', data[16:20])[0]
